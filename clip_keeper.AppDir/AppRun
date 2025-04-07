@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+
+HERE="$(dirname "$(readlink -f "${0}")")"
+EXEC="${HERE}/usr/bin/clip_keeper"
+
+exec "${EXEC}"
