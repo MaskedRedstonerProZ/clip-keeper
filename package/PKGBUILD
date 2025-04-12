@@ -1,0 +1,21 @@
+# Maintainer: MaskedRedstonerProZ <maskedredstonerproz@gmail.com>
+pkgname=clip-keeper
+pkgver=0.1.0
+pkgrel=1
+pkgdesc='Very simple rofi frontend for pass'
+source=(
+    "https://gitlab.com/MaskedRedstonerProZ/${pkgname}/-/raw/master/appimage/${pkgname}.AppImage"
+    "https://gitlab.com/MaskedRedstonerProZ/${pkgname}/-/raw/master/LICENSE"
+)
+arch=('x86_64')
+license=('GPL-3.0-or-later')
+makedepends=('wget')
+provides=("${pkgname}")
+depends=('rofi' 'pass')
+optdepends=()
+sha256sums=('SKIP')
+
+package() {
+  install -Dm755 "${pkgname}.AppImage" "${pkgdir}/usr/bin/${pkgname}"
+  install -Dm644 "LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
