@@ -4,7 +4,9 @@
 #+DESCRIPTION: Very simple rofi frontend for pass
 
 :toc:
-
+- [[#about-clip-keeper][About Clip Keeper]]
+- [[#license][License]]
+- [[#download/installation][Download/Installation]]
 
 
 * About Clip Keeper
