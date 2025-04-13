@@ -1,0 +1,31 @@
+#+TITLE: Clip Keeper
+#+AUTHOR: MaskedRedstonerProZ
+#+EMAIL: maskedredstonerproz@gmail.com
+#+DESCRIPTION: Very simple rofi frontend for pass
+
+:toc:
+
+
+
+* About Clip Keeper
+Clip Keeper is a very simple graphical frontend, for the Simple Password Manager (pass), that utilizes the Rofi launcher to display the actual passwords, and allow the user to copy them using the same mechanisms one would normally use in rofi, to launch a particular program (mouse click, return key press on selection). After copying, they stay in the clipboard for 45 seconds, after which they are cleared, and must be copied again, for further use. Currently only the aforementioned functionality is supported, since this is a new program which is very much in development, other features are planned to be made available in the coming releases
+
+* License
+Clip Keeper is licensed by the GNU General Public License version 3.0 or later, which states that any willing party is allowed to ammend, extend or otherwise contribute to the development of Clip Keeper. Permission is also granted to redistribute Clip Keeper as is, however one may like to do so, which extends to any derivative works that one may develop, with the condition of course, that the redistribution or the derivative work, contains a copy of the GNU General Public License version 3.0 or later, and makes it available to the end user.
+
+* Download/Installation
+Clip Keeper is available for download/installation at the following official locations, any others that may be found, while permitted to exist, are to be used according to the user's own discretion, as they lack official developer support, and safety guarantee
+** Direct download from Gitlab
+Users may download a copy of Clip Keeper from the official [[https://gitlab.com/MaskedRedstonerProZ/clip-keeper][gitlab repository]] in the following ways:
+*** A direct AppImage download
+An AppImage build, which the user is meant to manage by themselves
+*** A direct ArchLinux package download
+An ArchLinux package, which when installed puts the aforementioned AppImage in the standard linux binary install directory, without the AppImage extension
+** Download/Install from my custom ArchLinux repository maskedredstonerproz-core
+Users may add my custom ArchLinux repository, as described below, in which I've made Clip Keeper available, among other custom builds of existing sofware
+
+In /etc/pacman.conf add the following:
+#+BEGIN_SRC
+[maskedredstonerproz-core]
+Server = https://gitlab.com/MaskedRedstonerProZ/$repo/-/raw/main/$arch
+#+END_SRC
