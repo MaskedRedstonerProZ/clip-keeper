@@ -3,6 +3,15 @@
 #+EMAIL: maskedredstonerproz@gmail.com
 #+DESCRIPTION: Very simple rofi frontend for pass
 
+#+BEGIN_EXPORT html
+<a href="https://gitlab.com/your-group/your-project">
+  <img
+    alt="Read-only mirror badge"
+    src="https://img.shields.io/badge/mirror-read_only-lightgrey.svg"
+  />
+</a>
+#+END_EXPORT
+
 :toc:
 - [[#about-clip-keeper][About Clip Keeper]]
 - [[#license][License]]
