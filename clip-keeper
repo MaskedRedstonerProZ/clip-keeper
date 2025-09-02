@@ -1,0 +1,82 @@
+#!/usr/bin/env sh
+
+# Copyright (C) 2025 MaskedRedstonerProZ
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+set -uo pipefail
+
+handle_password_add_statement() {
+    PASS_DIR=$(echo $1 | awk '{ print $3 }' | sed -e 's/^[[]*//; s/.$//' )
+    PASS_FILE_NAME=$(echo $1 | awk '{ print $5 }' | sed -e 's/.$//')
+    PASS_ENTRY_TYPE=$(echo $1 | awk '{ print $7 }' | sed -e 's/.$//')
+
+    if [[ "$PASS_ENTRY_TYPE" == "UserInput" ]]; then
+        PASSWORD=$(rofi -config $CLIP_KEEPER_CONFIG_LOCATION -dmenu -password -p "clip-keeper")
+        echo "$PASSWORD" | pass insert -e "$PASS_DIR/$PASS_FILE_NAME"
+        pass show -c "$PASS_DIR/$PASS_FILE_NAME"
+        exit 0
+    fi
+}
+
+handle_password_change_statement() {
+    PASS_FILE_NAME=$(echo $1 | awk '{ print $3 }' | sed -e 's/.$//')
+    PASS_ENTRY_TYPE=$(echo $1 | awk '{ print $5 }' | sed -e 's/.$//')
+
+    if [[ "$PASS_ENTRY_TYPE" == "UserInput" ]]; then
+        PASSWORD=$(rofi -config $CLIP_KEEPER_CONFIG_LOCATION -dmenu -password -p "clip-keeper")
+        echo "$PASSWORD" | pass insert -ef "$PASS_FILE_NAME"
+        pass show -c "$PASS_FILE_NAME"
+        exit 0
+    fi
+}
+
+
+main() {
+
+    if [ ! -f $(whereis "rofi" | awk '{ print $2 }') ]; then
+        echo "Rofi Program Launcher (rofi) must be installed to use Clip Keeper"
+        exit 1
+    elif [ ! -f $(whereis "pass" | awk '{ print $2 }') ]; then
+        echo "Simple Password Store (pass) must be installed to use Clip Keeper"
+        exit 1
+    fi
+
+    : "${CLIP_KEEPER_MODI_LOCATION:="/opt/clip-keeper/modi"}"
+    : "${CLIP_KEEPER_CONFIG_LOCATION:="/opt/clip-keeper/config/config.rasi"}"
+
+    if [ ! -f ${CLIP_KEEPER_CONFIG_LOCATION} ]; then
+        cat >> "${CLIP_KEEPER_CONFIG_LOCATION}" << EOF
+@import "~/.config/rofi/config.rasi"
+
+configuration {
+    modes: "clip-keeper";
+    kb-element-next: "";
+    kb-move-char-forward: "Control+f,Alt+Right";
+    kb-custom-1: "Tab,Right";
+}
+
+inputbar {
+    children: [prompt,entry,case-indicator];
+}
+EOF
+    fi
+
+    RESULT=$(ROFI_PLUGIN_PATH=${CLIP_KEEPER_MODI_LOCATION} rofi -config ${CLIP_KEEPER_CONFIG_LOCATION} -show clip-keeper)
+    echo $RESULT | grep 'PASS_ADD' && handle_password_add_statement "${RESULT}" || echo "${RESULT}" | grep 'PASS_CHNG' && handle_password_change_statement "${RESULT}" || echo "${RESULT}"
+}
+
+main "${@}"

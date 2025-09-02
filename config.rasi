@@ -1,0 +1,12 @@
+@import "~/.config/rofi/config.rasi"
+
+configuration {
+    modes: "clip-keeper";
+    kb-element-next: "";
+    kb-move-char-forward: "Control+f,Alt+Right";
+    kb-custom-1: "Tab,Right";
+}
+
+inputbar {
+    children: [prompt,entry,case-indicator];
+}

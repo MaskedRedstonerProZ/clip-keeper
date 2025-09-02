@@ -1,0 +1,63 @@
+#!/usr/bin/env sh
+
+# Copyright (C) 2025 MaskedRedstonerProZ
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+set -uo pipefail
+
+LATEST_VERSION="release-1.1.0"
+DOWNLOAD_URL="https://gitlab.com/MaskedRedstonerProZ/clip-keeper/-/releases/${LATEST_VERSION}/downloads/clip-keeper.tar.gz"
+CLIP_KEEPER_MODI_LOCATION="/opt/clip-keeper/modi"
+CLIP_KEEPER_CONFIG_LOCATION="/opt/clip-keeper/config/config.rasi"
+
+: "${PREFIX:=${pkgdir:-/}}"
+
+cat >> "${CLIP_KEEPER_CONFIG_LOCATION}" << EOF
+@import "~/.config/rofi/config.rasi"
+
+configuration {
+    modes: "clip-keeper";
+    kb-element-next: "";
+    kb-move-char-forward: "Control+f,Alt+Right";
+    kb-custom-1: "Tab,Right";
+}
+
+inputbar {
+    children: [prompt,entry,case-indicator];
+}
+EOF
+
+main() {
+
+	if [[ $EUID -ne 0 ]]; then
+		if command -v sudo >/dev/null; then
+			exec sudo bash "$0" "$@"
+		else
+			echo "This installer requires root privileges. Please run with sudo."
+			exit 1
+		fi
+	fi
+
+	wget -qO- "${DOWNLOAD_URL}" | tar -JxC "${PWD}"
+
+	mv "${PWD}/libclip_keeper.so" "${PREFIX}/${CLIP_KEEPER_MODI_LOCATION}"
+	mv "${PWD}/clip-keeper" "${PREFIX}/usr/bin/clip-keeper"
+
+	trap "rm -rf {${PWD}/libclip_keeper.so,${PWD}/clip-keeper}"
+}
+
+main "${@}"

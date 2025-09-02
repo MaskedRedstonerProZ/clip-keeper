@@ -15,23 +15,27 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-.POSIX:
+pkgname=clip-keeper
+pkgver=1.1.0
+pkgrel=1
+pkgdesc="Very simple rofi frontend for pass"
+url="https://gitlab.com/MaskedRedstonerProZ/${pkgname}.git"
+source=(
+	"https://gitlab.com/MaskedRedstonerProZ/${pkgname}/-/raw/master/install"
+	"https://gitlab.com/MaskedRedstonerProZ/${pkgname}/-/raw/master/LICENSE"
+)
+arch=("x86_64")
+license=("GPL-3.0-or-later")
+makedepends=("wget")
+depends=("rofi" "pass")
+optdepends=()
+sha256sums=('SKIP' 'SKIP')
 
-all: clean build package-tarball
+build() {
+	exec ${PWD}/install
+}
 
-clean:
-	cargo clean; \
-	rm -rf clip-keeper.tar.gz
+package() {
 
-build:
-	cargo build --release --package clip-keeper --lib
-
-package-tarball:
-	cp target/release/libclip_keeper.so ${PWD}; \
-	tar -czf clip-keeper.tar.gz clip-keeper libclip_keeper.so; \
-	rm -rf libclip_keeper.so
-
-run:
-	${PWD}/clip-keeper
-
-.PHONY: clean build package run all
+	install -Dm644 "LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
